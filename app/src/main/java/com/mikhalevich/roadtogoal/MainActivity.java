@@ -1,7 +1,5 @@
 package com.mikhalevich.roadtogoal;
 
-import android.app.DialogFragment;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,16 +11,19 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.mikhalevich.roadtogoal.domain.MainTask;
-import com.mikhalevich.roadtogoal.domain.TasksRepository;
+import com.mikhalevich.roadtogoal.domain.GoalRepository;
+import com.mikhalevich.roadtogoal.domain.GoalRoomDatabase;
+import com.mikhalevich.roadtogoal.model.MainTask;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+
+import lombok.Getter;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private TasksRepository tasksRepository;
+
+    @Getter
+    private static GoalRepository goalRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +45,16 @@ public class MainActivity extends AppCompatActivity {
         mainTasks.add(new MainTask("Task_1"));
         mainTasks.add(new MainTask("Task_2"));
 
+        goalRepository = new GoalRepository(getApplication());
+
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
+        //RecyclerView.Adapter mAdapter = new RecyclerAdapter(goalRepository.getAllGoals());
         RecyclerView.Adapter mAdapter = new RecyclerAdapter(mainTasks);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
     }
 
 

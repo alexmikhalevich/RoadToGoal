@@ -1,4 +1,4 @@
-package com.mikhalevich.roadtogoal.domain;
+package com.mikhalevich.roadtogoal.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
