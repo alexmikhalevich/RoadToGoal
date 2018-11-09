@@ -12,10 +12,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mikhalevich.roadtogoal.domain.GoalRepository;
-import com.mikhalevich.roadtogoal.domain.GoalRoomDatabase;
-import com.mikhalevich.roadtogoal.model.MainTask;
+import com.mikhalevich.roadtogoal.domain.ViewGoalEntityProxy;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import lombok.Getter;
 
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
 
     @Getter
-    private static GoalRepository goalRepository;
+    private static GoalRepository<ViewGoalEntityProxy> goalRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,23 +41,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ArrayList<MainTask> mainTasks = new ArrayList<>();
-        mainTasks.add(new MainTask("Task_1"));
-        mainTasks.add(new MainTask("Task_2"));
-
-        goalRepository = new GoalRepository(getApplication());
+        goalRepository = new GoalRepository<>(getApplication());
 
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        //RecyclerView.Adapter mAdapter = new RecyclerAdapter(goalRepository.getAllGoals());
-        RecyclerView.Adapter mAdapter = new RecyclerAdapter(mainTasks);
+        RecyclerView.Adapter mAdapter = new RecyclerAdapter(goalRepository.getAllGoals());
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

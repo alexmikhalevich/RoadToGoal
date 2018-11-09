@@ -5,18 +5,21 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
-public class GoalRepository {
+public class GoalRepository<GoalEntityT extends GoalEntity> {
 
     private GoalDao goalDao;
-    private List<GoalEntity> goalEntities;
+    private List<GoalEntityT> goalEntities;
 
     public GoalRepository(Application application) {
         GoalRoomDatabase db = GoalRoomDatabase.getDatabase(application);
         goalDao = db.goalDao();
-        goalEntities = goalDao.selectAllGoals();
+
+        //TODO: check whether selectAllGoals() will not be called multiple times
+        for (Object g : goalDao.selectAllGoals())
+            goalEntities.add((GoalEntityT) g);
     }
 
-    public List<GoalEntity> getAllGoals() {
+    public List<GoalEntityT> getAllGoals() {
         return goalEntities;
     }
 
@@ -25,7 +28,6 @@ public class GoalRepository {
     }
 
     private static class insertAsyncTask extends AsyncTask<GoalEntity, Void, Void> {
-
         private GoalDao goalAsyncDao;
 
         insertAsyncTask(GoalDao dao) {

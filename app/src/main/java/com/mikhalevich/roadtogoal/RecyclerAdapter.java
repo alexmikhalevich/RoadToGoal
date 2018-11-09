@@ -8,12 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.mikhalevich.roadtogoal.model.MainTask;
+import com.mikhalevich.roadtogoal.domain.ViewGoalEntityProxy;
 
 import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>{
-    private List<MainTask> mainTasks;
+    private List<ViewGoalEntityProxy> goals;
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         final TextView nameView;
@@ -30,8 +30,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
     }
 
-    public RecyclerAdapter(List<MainTask> mainTasks) {
-        this.mainTasks = mainTasks;
+    public RecyclerAdapter(List<ViewGoalEntityProxy> mainTasks) {
+        this.goals = mainTasks;
     }
 
     @NonNull
@@ -44,12 +44,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position){
-        MainTask mainTask = mainTasks.get(position);
+        ViewGoalEntityProxy mainTask = goals.get(position);
         viewHolder.nameView.setText(mainTask.getName());
     }
     @Override
     public int getItemCount(){
-        return mainTasks.size();
+        return goals.size();
     }
 
 }
