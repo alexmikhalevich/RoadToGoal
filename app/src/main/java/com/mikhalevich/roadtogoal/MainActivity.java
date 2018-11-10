@@ -1,12 +1,15 @@
 package com.mikhalevich.roadtogoal;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,7 +18,6 @@ import com.mikhalevich.roadtogoal.domain.GoalRepository;
 import com.mikhalevich.roadtogoal.domain.ViewGoalEntityProxy;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import lombok.Getter;
 
@@ -23,7 +25,24 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
 
     @Getter
-    private static GoalRepository<ViewGoalEntityProxy> goalRepository;
+    private ArrayList<ViewGoalEntityProxy> goalList;
+
+    //TODO: suppress warning
+    class LoadGoalsTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            goalList.clear();
+            goalList.addAll(GoalRepository.getRepository().getAllGoals(true,
+                    ViewGoalEntityProxy.class));
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            recyclerView.getAdapter().notifyDataSetChanged();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,18 +55,35 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(view.getContext(), AddGoalActivity.class);
+                MainActivity.this.startActivity(intent);
             }
         });
 
-        goalRepository = new GoalRepository<>(getApplication());
+        GoalRepository.initRepository(getApplication());
+        goalList = new ArrayList<>();
 
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        RecyclerView.Adapter mAdapter = new RecyclerAdapter(goalRepository.getAllGoals());
-        recyclerView.setAdapter(mAdapter);
+        RecyclerView.Adapter adapter = new RecyclerAdapter(goalList);
+        recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        LoadGoalsTask task = new LoadGoalsTask();
+        task.execute();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d("Info", "onResume called");
+
+        super.onResume();
+
+        goalList.clear();
+        goalList.addAll(GoalRepository.getRepository()
+                .getAllGoals(false, ViewGoalEntityProxy.class));
+        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override

@@ -9,9 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity(tableName = "goals_table")
-@Getter
-@Setter
-@AllArgsConstructor
 public class GoalEntity {
     public GoalEntity() {}
 
@@ -21,5 +18,4 @@ public class GoalEntity {
 
     @ColumnInfo(name = "name")
     protected String name;
-
 }

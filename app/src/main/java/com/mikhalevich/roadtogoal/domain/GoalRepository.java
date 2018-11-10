@@ -1,43 +1,59 @@
 package com.mikhalevich.roadtogoal.domain;
 
 import android.app.Application;
-import android.os.AsyncTask;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class GoalRepository<GoalEntityT extends GoalEntity> {
+public class GoalRepository {
 
     private GoalDao goalDao;
-    private List<GoalEntityT> goalEntities;
+    private List<GoalEntity> goalEntities;
+    private static GoalRepository instance;
 
-    public GoalRepository(Application application) {
+    private GoalRepository(Application application) {
+        goalEntities = new ArrayList<>();
+
         GoalRoomDatabase db = GoalRoomDatabase.getDatabase(application);
         goalDao = db.goalDao();
-
-        //TODO: check whether selectAllGoals() will not be called multiple times
-        for (Object g : goalDao.selectAllGoals())
-            goalEntities.add((GoalEntityT) g);
     }
 
-    public List<GoalEntityT> getAllGoals() {
-        return goalEntities;
-    }
-
-    public void insert(GoalEntity goalEntity) {
-        new insertAsyncTask(goalDao).execute(goalEntity);
-    }
-
-    private static class insertAsyncTask extends AsyncTask<GoalEntity, Void, Void> {
-        private GoalDao goalAsyncDao;
-
-        insertAsyncTask(GoalDao dao) {
-            this.goalAsyncDao = dao;
+    private <GoalEntityT extends GoalEntityProxy>
+    List<GoalEntityT> castGoals(final Class<GoalEntityT> kind) {
+        List<GoalEntityT> result = new ArrayList<>();
+        try {
+            for (GoalEntity g : goalEntities) {
+                GoalEntityT entity =
+                        kind.getDeclaredConstructor(GoalEntity.class).newInstance(g);
+                result.add(entity);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        return result;
+    }
 
-        @Override
-        protected Void doInBackground(final GoalEntity... entities) {
-            goalAsyncDao.insert(entities[0]);
-            return null;
-        }
+    public static synchronized void initRepository(Application application) {
+        if (instance == null)
+            instance = new GoalRepository(application);
+    }
+
+    public static GoalRepository getRepository() {
+        assert (instance != null);
+        return instance;
+    }
+
+    public <GoalEntityT extends GoalEntityProxy>
+    List<GoalEntityT> getAllGoals(boolean forceReload, final Class<GoalEntityT> kind) {
+        if (forceReload)
+            goalEntities = goalDao.selectAllGoals();
+
+        return castGoals(kind);
+    }
+
+    public <GoalEntityT extends GoalEntityProxy>
+    void insertGoal(final GoalEntityT goalEntity) {
+        goalEntities.add(goalEntity.getProxied());
+        goalDao.insert(goalEntity);
     }
 }
