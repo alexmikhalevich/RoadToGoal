@@ -1,14 +1,19 @@
 package com.mikhalevich.roadtogoal;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -21,11 +26,38 @@ import java.util.ArrayList;
 
 import lombok.Getter;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
     private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
 
     @Getter
     private ArrayList<ViewGoalEntityProxy> goalList;
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof RecyclerAdapter.ViewHolder) {
+            String name = goalList.get(viewHolder.getAdapterPosition()).getName();
+            final ViewGoalEntityProxy deletedItem = goalList.get(viewHolder.getAdapterPosition());
+            final int deletedIndex = viewHolder.getAdapterPosition();
+            goalList.remove(viewHolder.getAdapterPosition());
+            adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+
+            CoordinatorLayout coordinatorLayout = findViewById(R.id.main_layout);
+            Snackbar snackbar = Snackbar
+                    .make(coordinatorLayout, name + " removed from goal list!",
+                            Snackbar.LENGTH_LONG);
+            snackbar.setAction("UNDO", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    goalList.add(deletedIndex, deletedItem);
+                    adapter.notifyItemInserted(deletedIndex);
+                }
+            });
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.show();
+            //TODO: delete from DB
+        }
+    }
 
     //TODO: suppress warning
     class LoadGoalsTask extends AsyncTask<Void, Void, Void> {
@@ -65,9 +97,16 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        RecyclerView.Adapter adapter = new RecyclerAdapter(goalList);
+        adapter = new RecyclerAdapter(goalList);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this,
+                DividerItemDecoration.VERTICAL));
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback =
+                new RecyclerItemTouchHelper(0,
+                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
         LoadGoalsTask task = new LoadGoalsTask();
         task.execute();
