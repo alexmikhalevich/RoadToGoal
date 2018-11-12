@@ -9,6 +9,7 @@ import android.widget.EditText;
 import com.mikhalevich.roadtogoal.domain.GoalEntity;
 import com.mikhalevich.roadtogoal.domain.GoalRepository;
 import com.mikhalevich.roadtogoal.domain.InsertGoalEntityProxy;
+import com.mikhalevich.roadtogoal.domain.dbtasks.InsertGoalTask;
 
 public class AddGoalActivity extends AppCompatActivity {
 
@@ -16,14 +17,6 @@ public class AddGoalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_goal);
-    }
-
-    static class InsertGoalTask extends AsyncTask<InsertGoalEntityProxy, Void, Void> {
-        @Override
-        protected Void doInBackground(InsertGoalEntityProxy... entity) {
-            GoalRepository.getRepository().insertGoal(entity[0]);
-            return null;
-        }
     }
 
     public void onClickCancel(View view) {

@@ -8,7 +8,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,16 +21,35 @@ import android.view.MenuItem;
 import com.mikhalevich.roadtogoal.domain.GoalRepository;
 import com.mikhalevich.roadtogoal.domain.ViewGoalEntityProxy;
 
+import com.mikhalevich.roadtogoal.domain.dbtasks.*;
+
 import java.util.ArrayList;
 
 import lombok.Getter;
 
-public class MainActivity extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
+public class MainActivity extends AppCompatActivity
+        implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
 
     @Getter
     private ArrayList<ViewGoalEntityProxy> goalList;
+
+    public class LoadGoalsTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            goalList.clear();
+            goalList.addAll(GoalRepository.getRepository().getAllGoals(true,
+                    ViewGoalEntityProxy.class));
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            recyclerView.getAdapter().notifyDataSetChanged();
+        }
+    }
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
@@ -53,26 +71,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
                     adapter.notifyItemInserted(deletedIndex);
                 }
             });
+            snackbar.addCallback(new Snackbar.Callback() {
+               @Override
+               public void onDismissed(Snackbar snackbar, int event) {
+                   DeleteGoalTask<ViewGoalEntityProxy> task = new DeleteGoalTask<>();
+                   task.execute(deletedItem);
+               }
+            });
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.show();
-            //TODO: delete from DB
-        }
-    }
-
-    //TODO: suppress warning
-    class LoadGoalsTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... voids) {
-            goalList.clear();
-            goalList.addAll(GoalRepository.getRepository().getAllGoals(true,
-                    ViewGoalEntityProxy.class));
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            recyclerView.getAdapter().notifyDataSetChanged();
         }
     }
 

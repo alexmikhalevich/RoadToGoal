@@ -1,6 +1,7 @@
 package com.mikhalevich.roadtogoal.domain;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
@@ -13,4 +14,7 @@ public interface GoalDao {
 
     @Query("SELECT * FROM goals_table")
     List<GoalEntity> selectAllGoals();
+
+    @Delete
+    void delete(GoalEntity goalEntity);
 }

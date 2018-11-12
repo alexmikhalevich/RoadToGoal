@@ -54,6 +54,12 @@ public class GoalRepository {
     public <GoalEntityT extends GoalEntityProxy>
     void insertGoal(final GoalEntityT goalEntity) {
         goalEntities.add(goalEntity.getProxied());
-        goalDao.insert(goalEntity);
+        goalDao.insert(goalEntity.getProxied());
+    }
+
+    public <GoalEntityT extends GoalEntityProxy>
+    void deleteGoal(final GoalEntityT goalEntity) {
+        goalEntities.remove(goalEntity.getProxied());
+        goalDao.delete(goalEntity.getProxied());
     }
 }
