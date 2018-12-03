@@ -1,5 +1,6 @@
 package com.mikhalevich.roadtogoal;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,6 +33,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         public void onClick(View view){
             int position = getLayoutPosition();
+            ViewGoalEntityProxy goal = goals.get(position);
+            Intent intent = new Intent(view.getContext(), ChildrenGoalsActivity.class);
+            intent.putExtra("parentId", goal.getId());
+            intent.putExtra("parentName", goal.getName());
+            view.getContext().startActivity(intent);
         }
     }
 

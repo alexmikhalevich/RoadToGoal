@@ -110,19 +110,6 @@ public class BasicActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
-        Log.d("Info", "onResume called");
-
-        super.onResume();
-
-        goalList.clear();
-        goalList.addAll(GoalRepository.getRepository()
-                .getAllGoals(false, -1, ViewGoalEntityProxy.class));
-        recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.getAdapter().notifyDataSetChanged();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
