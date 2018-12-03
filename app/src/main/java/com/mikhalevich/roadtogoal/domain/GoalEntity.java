@@ -9,16 +9,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity(tableName = "goals_table")
-@Getter
-@Setter
-@AllArgsConstructor
 public class GoalEntity {
+    public GoalEntity() {}
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    private Integer id;
+    protected Integer id;
 
     @ColumnInfo(name = "name")
-    private String name;
-
+    protected String name;
 }
