@@ -6,5 +6,7 @@ public class ViewGoalEntityProxy extends GoalEntityProxy {
         super(proxied);
     }
 
+    public Integer getId() { return proxied.id; }
     public String getName() { return proxied.name; }
+    public boolean hasChildren() { return proxied.hasChildren; }
 }

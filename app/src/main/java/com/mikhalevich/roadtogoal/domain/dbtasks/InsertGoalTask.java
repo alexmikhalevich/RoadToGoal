@@ -9,6 +9,7 @@ public class InsertGoalTask extends AsyncTask<InsertGoalEntityProxy, Void, Void>
     @Override
     protected Void doInBackground(InsertGoalEntityProxy... entity) {
         GoalRepository.getRepository().insertGoal(entity[0]);
+        //TODO: modify parent's "hasChildren"
         return null;
     }
 }

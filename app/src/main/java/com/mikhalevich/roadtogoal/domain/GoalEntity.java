@@ -18,4 +18,10 @@ public class GoalEntity {
 
     @ColumnInfo(name = "name")
     protected String name;
+
+    @ColumnInfo(name = "parent")
+    protected Integer parentId;
+
+    @ColumnInfo(name = "hasChildren")
+    protected Boolean hasChildren;
 }

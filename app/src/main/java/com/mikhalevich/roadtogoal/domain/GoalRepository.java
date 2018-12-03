@@ -44,9 +44,10 @@ public class GoalRepository {
     }
 
     public <GoalEntityT extends GoalEntityProxy>
-    List<GoalEntityT> getAllGoals(boolean forceReload, final Class<GoalEntityT> kind) {
+    List<GoalEntityT> getAllGoals(boolean forceReload, Integer parentId,
+                                  final Class<GoalEntityT> kind) {
         if (forceReload)
-            goalEntities = goalDao.selectAllGoals();
+            goalEntities = goalDao.selectAllGoals(parentId);
 
         return castGoals(kind);
     }
