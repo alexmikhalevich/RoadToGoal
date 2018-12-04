@@ -19,7 +19,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddGoalActivity"></activity>
+        <activity android:name=".AddGoalActivity" />
+        <activity
+            android:name=".ChildrenGoalsActivity"
+            android:label="@string/title_activity_children_goals"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

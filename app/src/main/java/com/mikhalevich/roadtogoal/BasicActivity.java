@@ -13,7 +13,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,11 +20,8 @@ import android.view.View;
 import com.mikhalevich.roadtogoal.domain.GoalRepository;
 import com.mikhalevich.roadtogoal.domain.ViewGoalEntityProxy;
 import com.mikhalevich.roadtogoal.domain.dbtasks.DeleteGoalTask;
-import com.mikhalevich.roadtogoal.domain.dbtasks.LoadGoalsTask;
 
 import java.util.ArrayList;
-
-import lombok.Getter;
 
 @SuppressLint("Registered")
 public class BasicActivity extends AppCompatActivity

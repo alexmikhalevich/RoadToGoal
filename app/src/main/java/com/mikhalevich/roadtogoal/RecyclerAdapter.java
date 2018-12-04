@@ -1,7 +1,9 @@
 package com.mikhalevich.roadtogoal;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -35,6 +37,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             view.setOnClickListener(this);
             viewForeground = view.findViewById(R.id.foregroundLayout);
             circleMenuView = view.findViewById(R.id.circleMenu);
+            circleMenuView.setMCenterX(/*viewRect.centerX()*/200);
+            circleMenuView.setMCenterY(/*viewRect.centerY()*/200);
         }
 
         public void onClick(View view) {

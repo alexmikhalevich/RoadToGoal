@@ -30,16 +30,20 @@ import com.mikhalevich.roadtogoal.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Setter;
+
 
 /**
  * CircleMenuView
  */
 public class CircleMenuView extends FrameLayout {
 
-    private static final int DEFAULT_BUTTON_SIZE = 27;
+    private static final int DEFAULT_BUTTON_SIZE = 10;
     private static final float DEFAULT_DISTANCE = DEFAULT_BUTTON_SIZE * 1.5f;
     private static final float DEFAULT_RING_SCALE_RATIO = 1.3f;
     private static final float DEFAULT_CLOSE_ICON_ALPHA = 0.3f;
+    private static final int DEFAULT_CENTER_X = 50;
+    private static final int DEFAULT_CENTER_Y = 50;
 
     private final List<View> mButtons = new ArrayList<>();
     private final Rect mButtonRect = new Rect();
@@ -58,6 +62,11 @@ public class CircleMenuView extends FrameLayout {
     private int mDurationClose;
     private int mDesiredSize;
     private int mRingRadius;
+
+    @Setter
+    private int mCenterX;
+    @Setter
+    private int mCenterY;
 
     private float mDistance;
 
@@ -196,6 +205,9 @@ public class CircleMenuView extends FrameLayout {
         if (attrs == null) {
             throw new IllegalArgumentException("No buttons icons or colors set");
         }
+
+        mCenterX = DEFAULT_CENTER_X;
+        mCenterY = DEFAULT_CENTER_Y;
 
         final int menuButtonColor;
         final List<Integer> icons;
@@ -497,9 +509,6 @@ public class CircleMenuView extends FrameLayout {
             }
         });
 
-        final float centerX = mMenuButton.getX();
-        final float centerY = mMenuButton.getY();
-
         final int buttonsCount = mButtons.size();
         final float angleStep = 360f / buttonsCount;
 
@@ -518,7 +527,7 @@ public class CircleMenuView extends FrameLayout {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 final float fraction = valueAnimator.getAnimatedFraction();
                 final float value = (float)valueAnimator.getAnimatedValue();
-                offsetAndScaleButtons(centerX, centerY, angleStep, value, fraction);
+                offsetAndScaleButtons(mCenterX, mCenterY, angleStep, value, fraction);
             }
         });
 
@@ -714,9 +723,6 @@ public class CircleMenuView extends FrameLayout {
         } else {
             mClosedState = !open;
 
-            final float centerX = mMenuButton.getX();
-            final float centerY = mMenuButton.getY();
-
             final int buttonsCount = mButtons.size();
             final float angleStep = 360f / buttonsCount;
 
@@ -731,7 +737,7 @@ public class CircleMenuView extends FrameLayout {
                 view.setVisibility(visibility);
             }
 
-            offsetAndScaleButtons(centerX, centerY, angleStep, offset, scale);
+            offsetAndScaleButtons(mCenterX, mCenterY, angleStep, offset, scale);
         }
     }
 
