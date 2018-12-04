@@ -3,7 +3,9 @@ package com.mikhalevich.roadtogoal;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -12,16 +14,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mikhalevich.roadtogoal.domain.ViewGoalEntityProxy;
+import com.mikhalevich.roadtogoal.circlemenu.CircleMenuView;
 
 import java.util.List;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>{
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
     private List<ViewGoalEntityProxy> goals;
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener, View.OnLongClickListener {
         final TextView nameView;
         final ProgressBar progressBar;
         public LinearLayout viewForeground;
+        private CircleMenuView circleMenuView;
 
         ViewHolder(View view) {
             super(view);
@@ -29,15 +34,21 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             progressBar = view.findViewById(R.id.progressBar);
             view.setOnClickListener(this);
             viewForeground = view.findViewById(R.id.foregroundLayout);
+            circleMenuView = view.findViewById(R.id.circleMenu);
         }
 
-        public void onClick(View view){
+        public void onClick(View view) {
             int position = getLayoutPosition();
             ViewGoalEntityProxy goal = goals.get(position);
             Intent intent = new Intent(view.getContext(), ChildrenGoalsActivity.class);
             intent.putExtra("parentId", goal.getId());
             intent.putExtra("parentName", goal.getName());
             view.getContext().startActivity(intent);
+        }
+
+        public boolean onLongClick(View view) {
+            circleMenuView.open(true);
+            return true;
         }
     }
 

@@ -77,4 +77,14 @@
         </android.support.v7.widget.CardView>
 
     </LinearLayout>
+
+    <com.mikhalevich.roadtogoal.circlemenu.CircleMenuView
+        android:id="@+id/circleMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:button_colors="@array/colors"
+        app:button_icons="@array/icons"
+        app:distance="50dp">
+    </com.mikhalevich.roadtogoal.circlemenu.CircleMenuView>
+
 </FrameLayout>
