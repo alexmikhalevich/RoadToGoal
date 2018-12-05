@@ -51,10 +51,11 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/image_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/card_view_background"> <!--add possibility to change picture-->
+                    android:background="@drawable/card_view_background"> <!--TODO: add possibility to change picture-->
 
                     <TextView
                         android:id="@+id/task_name"
@@ -78,8 +79,8 @@
 
     </LinearLayout>
 
-    <com.mikhalevich.roadtogoal.circlemenu.CircleMenuView
-        android:id="@+id/circleMenu"
+    <com.mikhalevich.roadtogoal.goalmenu.GoalMenuView
+        android:id="@+id/goalMenu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:button_colors="@array/colors"
