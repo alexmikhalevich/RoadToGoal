@@ -5,19 +5,15 @@ import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mikhalevich.roadtogoal.domain.ViewGoalEntityProxy;
-import com.mikhalevich.roadtogoal.circlemenu.CircleMenuView;
+import com.mikhalevich.roadtogoal.goalmenu.GoalMenuView;
 
 import java.util.List;
 
@@ -51,10 +47,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         @Override
         public boolean onLongClick(View view) {
-            CircleMenuView circleMenuView = view.findViewById(R.id.circleMenu);
-            circleMenuView.setMCenterX(circleMenuView.getWidth() / 2);
-            circleMenuView.setMCenterY(circleMenuView.getHeight() / 2);
-            circleMenuView.open(true);
+            GoalMenuView goalMenuView = view.findViewById(R.id.goalMenu);
+            CardView cardView = view.findViewById(R.id.card_view);
+            Rect viewRect = new Rect();
+            cardView.getLocalVisibleRect(viewRect);
+            goalMenuView.open(viewRect.centerX(), viewRect.centerY());
 
             return true;
         }
