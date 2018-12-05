@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -28,19 +29,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         final TextView nameView;
         final ProgressBar progressBar;
         public LinearLayout viewForeground;
-        private CircleMenuView circleMenuView;
 
         ViewHolder(View view) {
             super(view);
             nameView = view.findViewById(R.id.task_name);
             progressBar = view.findViewById(R.id.progressBar);
             view.setOnClickListener(this);
+            view.setOnLongClickListener(this);
             viewForeground = view.findViewById(R.id.foregroundLayout);
-            circleMenuView = view.findViewById(R.id.circleMenu);
-            circleMenuView.setMCenterX(/*viewRect.centerX()*/200);
-            circleMenuView.setMCenterY(/*viewRect.centerY()*/200);
         }
 
+        @Override
         public void onClick(View view) {
             int position = getLayoutPosition();
             ViewGoalEntityProxy goal = goals.get(position);
@@ -50,8 +49,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             view.getContext().startActivity(intent);
         }
 
+        @Override
         public boolean onLongClick(View view) {
+            CircleMenuView circleMenuView = view.findViewById(R.id.circleMenu);
+            circleMenuView.setMCenterX(circleMenuView.getWidth() / 2);
+            circleMenuView.setMCenterY(circleMenuView.getHeight() / 2);
             circleMenuView.open(true);
+
             return true;
         }
     }
@@ -77,5 +81,4 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public int getItemCount(){
         return goals.size();
     }
-
 }
